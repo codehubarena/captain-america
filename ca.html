@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presidential Perspectives</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #eef2ff, #ede9fe, #fae8ff);
+            color: #334155;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .chat-window {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-window.active {
+            opacity: 1;
+        }
+
+        .chat-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-window.active .chat-container {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .chat-header {
+            padding: 20px 24px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header span {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 24px;
+            max-width: 85%;
+            padding: 16px 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .user-message {
+            background: #4f46e5;
+            color: white;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-input-container {
+            padding: 24px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 6px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .chat-input button:hover {
+            background: #4338ca;
+        }
+
+        .chat-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .chat-close:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(148, 163, 184, 0.1);
+        }
+
+        .nav-link {
+            position: relative;
+            color: #4b5563;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4f46e5;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .mobile-nav-link {
+            position: relative;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 2rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .mobile-nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: #4f46e5;
+        }
+
+        .mobile-nav-link:hover::after {
+            width: 30%;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 2rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .mobile-nav-link:hover {
+            background: #f8fafc;
+            color: #4f46e5;
+        }
+
+        .hero-section {
+            background: linear-gradient(120deg, rgba(255,255,255,0.1), rgba(255,255,255,0.4));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+        }
+
+        .section-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(148, 163, 184, 0.15);
+            background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.5));
+        }
+
+        .section-card h2 {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .locked {
+            position: relative;
+            filter: grayscale(0.5);
+            opacity: 0.7;
+        }
+
+        .locked::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(241,245,249,0.7), rgba(226,232,240,0.7));
+            backdrop-filter: blur(4px);
+            border-radius: 16px;
+            transition: all 0.5s ease;
+			z-index: 1;
+        }
+		
+		.lock-icon {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 2;
+			font-size: 2rem;
+		}
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content-wrapper {
+            background: linear-gradient(170deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2));
+            border-radius: 30px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<header class="navbar fixed w-full z-50 px-8 py-6 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="text-2xl font-semibold gradient-text tracking-tight">Presidential Perspectives</div>
+        
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="lg:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                <path class="close-icon hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:flex space-x-2">
+            <a href="#section1" class="nav-link">Policy</a>
+            <a href="#section2" class="nav-link">Economics</a>
+            <a href="#section3" class="nav-link">Relations</a>
+            <a href="#section4" class="nav-link">Media</a>
+            <a href="#section5" class="nav-link">Review</a>
+        </nav>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="lg:hidden hidden absolute top-full left-0 right-0 bg-white shadow-lg rounded-b-xl mx-4 mt-2 overflow-hidden border border-gray-100">
+        <div class="py-4">
+            <div class="flex flex-col items-center space-y-4">
+                <a href="#section1" class="mobile-nav-link text-lg">Policy</a>
+                <a href="#section2" class="mobile-nav-link text-lg">Economics</a>
+                <a href="#section3" class="mobile-nav-link text-lg">Relations</a>
+                <a href="#section4" class="mobile-nav-link text-lg">Media</a>
+                <a href="#section5" class="mobile-nav-link text-lg">Review</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="pt-40 px-8 pb-16 relative z-10">
+    <div class="max-w-7xl mx-auto">
+        <section class="hero-section p-16 text-center mb-16">
+            <h1 class="text-5xl font-bold mb-6 gradient-text">Captain America ($TRUMP)</h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">A memecoin that captures the essence of Trump's presidency through five unique themes. Dive into our politically-flavored DeFi ecosystem where memes meet policy, and MAGA meets blockchain.</p>
+        </section>
+
+        <div class="content-wrapper">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div id="section1" class="section-card p-8">
+                    <h2 class="text-2xl font-semibold mb-4">Big Beautiful Walls</h2>
+                    <p class="text-slate-600">Explore the cornerstone of Trump's border policies and their impact.</p>
+                </div>
+
+                <div id="section2" class="section-card p-8 locked">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="text-2xl font-semibold mb-4">Tax-Cut Pie</h2>
+                    <p class="text-slate-600">Dive into the economic reforms that shaped the nation.</p>
+                </div>
+
+                <div id="section3" class="section-card p-8 locked">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="text-2xl font-semibold mb-4">Trade War Stew</h2>
+                    <p class="text-slate-600">Uncover the complex flavors of international trade disputes.</p>
+                </div>
+
+                <div id="section4" class="section-card p-8 locked">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="text-2xl font-semibold mb-4">Fake News Feast</h2>
+                    <p class="text-slate-600">Taste the spicy relationship between Trump and media.</p>
+                </div>
+
+                <div id="section5" class="section-card p-8 locked">
+                    <div class="lock-icon">🔒</div>
+                    <h2 class="text-2xl font-semibold mb-4">MAGA Cocktail</h2>
+                    <p class="text-slate-600">The ultimate mix of Trump-era highlights and memorable moments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Chat Windows -->
+    <div id="chat-section1" class="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>Big Beautiful Walls</span>
+                <button class="chat-close">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <div class="message bot-message">Tremendous walls, folks! Ready to discuss the greatest border policies ever. What would you like to know about?</div>
+            </div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about border policies...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-section2" class="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>Tax-Cut Pie</span>
+                <button class="chat-close">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <div class="message bot-message">Beautiful tax cuts, the best tax cuts! Let's talk about the historic economic reforms. What interests you?</div>
+            </div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about tax reforms...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-section3" class="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>Trade War Stew</span>
+                <button class="chat-close">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <div class="message bot-message">We're winning these trade wars, believe me! What would you like to know about our tremendous trade deals?</div>
+            </div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about trade wars...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-section4" class="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>Fake News Feast</span>
+                <button class="chat-close">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <div class="message bot-message">The media's never seen anything like this! Ready to discuss the greatest hits of the fake news era. What's on your mind?</div>
+            </div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about media coverage...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-section5" class="chat-window">
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>MAGA Cocktail</span>
+                <button class="chat-close">&times;</button>
+            </div>
+            <div class="chat-messages">
+                <div class="message bot-message">We're making crypto great again! Let's dive into the greatest highlights of the MAGA movement. Which part interests you the most?</div>
+            </div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Ask about MAGA moments...">
+                    <button>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<footer class="bg-white/20 backdrop-blur-sm py-6 border-t border-white/20">
+    <div class="max-w-7xl mx-auto px-6 text-center text-slate-600">
+        <p>&copy; 2025 Presidential Policy Analysis</p>
+    </div>
+</footer>
+
+<script>
+    window.addEventListener('click', (e) => {
+        if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
+            toggleMenu();
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        if (!mobileMenu.classList.contains('hidden')) {
+            toggleMenu();
+        }
+        
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 20) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Remove progressive unlocking
+    const unlockSchedule = [];
+
+    unlockSchedule.forEach(({ id, delay }) => {
+        setTimeout(() => {
+            const section = document.getElementById(id);
+            if (section) {
+                section.classList.remove('locked');
+                section.classList.add('unlock-animation');
+            }
+        }, delay);
+    });
+
+    // Chat functionality
+    const sections = document.querySelectorAll('.section-card');
+    const chatWindows = document.querySelectorAll('.chat-window');
+    const chatCloseButtons = document.querySelectorAll('.chat-close');
+    const chatInputs = document.querySelectorAll('.chat-input input');
+    const sendButtons = document.querySelectorAll('.chat-input button');
+
+    sections.forEach((section, index) => {
+        section.addEventListener('click', () => {
+            if (!section.classList.contains('locked')) {
+                const chatWindow = document.getElementById(`chat-section${index + 1}`);
+                chatWindow.style.display = 'block';
+                // Add active class after a small delay to trigger animation
+                setTimeout(() => {
+                    chatWindow.classList.add('active');
+                }, 50);
+            }
+        });
+    });
+
+    chatCloseButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            const chatWindow = e.target.closest('.chat-window');
+            chatWindow.classList.remove('active');
+            // Hide the window after animation completes
+            setTimeout(() => {
+                chatWindow.style.display = 'none';
+            }, 300);
+        });
+    });
+
+    function appendMessage(messagesContainer, text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = text;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    chatWindows.forEach((chatWindow) => {
+        const input = chatWindow.querySelector('input');
+        const button = chatWindow.querySelector('button');
+        const messagesContainer = chatWindow.querySelector('.chat-messages');
+
+        async function sendMessage() {
+            const message = input.value.trim();
+            if (!message) return;
+
+            appendMessage(messagesContainer, message, true);
+            input.value = '';
+
+            try {
+                // Simulate OpenAI response (replace with actual API call)
+                setTimeout(() => {
+                    appendMessage(messagesContainer, "I understand your interest. Here's my perspective on that topic...", false);
+                }, 1000);
+            } catch (error) {
+                appendMessage(messagesContainer, "Sorry, I couldn't process your message. Please try again.", false);
+            }
+        }
+
+        button.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    });
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.querySelector('.menu-icon');
+    const closeIcon = document.querySelector('.close-icon');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    function toggleMenu() {
+        mobileMenu.classList.toggle('hidden');
+        menuIcon.classList.toggle('hidden');
+        closeIcon.classList.toggle('hidden');
+        document.body.classList.toggle('overflow-hidden');
+    }
+
+    mobileMenuButton.addEventListener('click', toggleMenu);
+
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            toggleMenu();
+        });
+    });
+
+    // Close button functionality
+    document.querySelector('.mobile-close-button').addEventListener('click', toggleMenu);
+</script>
+
+</body>
+</html>
