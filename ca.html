@@ -439,10 +439,16 @@
             font-family: 'Digital', monospace;
         }
 
-        #socialcredit{
-            width: 110%;
-            margin-left: -20px;
-        } 
+        #socialcredit {
+            width: calc(100% + 3rem); /* Wider than the parent container */
+            margin: 0 auto; /* Centers the div horizontally */
+            position: relative; /* Ensures proper placement of children */
+            left: 0; /* Resets any left offset */
+            right: 0; /* Resets any right offset */
+            transform: translateX(-1.5rem); /* Centers the div considering the extra width */
+        }
+
+
         
     </style>
 </head>
@@ -535,8 +541,8 @@
             </div>
         
             <!-- Social Credit Section -->
-            <div id='socialcredit' class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
-                <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-xl p-6 shadow-lg max-w-2xl mx-auto border border-white/40">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
+                <div id='socialcredit' class="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-xl p-6 shadow-lg max-w-2xl mx-auto border border-white/40">
                     <!-- Title Section with Improved Styling -->
                     <div class="text-center mb-8">
                         <h2 class="text-3xl font-bold gradient-text mb-3">MAGA Social Credit</h2>
