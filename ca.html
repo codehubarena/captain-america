@@ -1143,6 +1143,8 @@ challenges.forEach(challenge => {
        </div>
    `;
 
+   button.style.WebkitTapHighlightColor = 'transparent';
+
    button.onclick = async () => {
        if (await challenge.verify()) {
            socialCredit += challenge.reward;
