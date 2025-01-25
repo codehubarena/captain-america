@@ -439,10 +439,10 @@
             font-family: 'Digital', monospace;
         }
 
-        .shadow-lg {
+        #socialcredit{
             width: 110%;
             margin-left: -20px;
-        }
+        } 
         
     </style>
 </head>
@@ -535,24 +535,36 @@
             </div>
         
             <!-- Social Credit Section -->
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
-                <div class="bg-white rounded-xl p-6 shadow-lg max-w-4xl mx-auto">
-                    <div class="text-center mb-6">
-                        <h2 class="text-2xl font-bold gradient-text mb-2">MAGA Social Credit</h2>
-                        <div class="flex items-center justify-center gap-2">
-                            <span id="rankIcon"></span>
-                            <span id="rankName" class="text-lg font-semibold">Patriot</span>
+            <div id='socialcredit' class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
+                <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-xl p-6 shadow-lg max-w-2xl mx-auto border border-white/40">
+                    <!-- Title Section with Improved Styling -->
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold gradient-text mb-3">MAGA Social Credit</h2>
+                        <div class="flex items-center justify-center gap-3">
+                            <span id="rankIcon" class="text-2xl"></span>
+                            <span id="rankName" class="text-xl font-semibold text-indigo-700">Patriot</span>
                         </div>
                     </div>
-                    <div class="relative mb-8">
-                        <div class="w-24 h-24 mx-auto rounded-full border-4 border-indigo-600 flex items-center justify-center">
-                            <span id="creditScore" class="text-xl font-bold">1000</span>
+             
+                    <!-- Score Circle with Enhanced Design -->
+                    <div class="relative mb-10">
+                        <div class="w-32 h-32 mx-auto rounded-full border-4 border-indigo-600 flex items-center justify-center bg-white/50 shadow-inner">
+                            <span id="creditScore" class="text-3xl font-bold text-indigo-700">1000</span>
                         </div>
+                        <!-- Decorative Elements -->
+                        <div class="absolute -top-2 -left-2 w-4 h-4 border-2 border-violet-400 rounded-full"></div>
+                        <div class="absolute -top-2 -right-2 w-4 h-4 border-2 border-violet-400 rounded-full"></div>
+                        <div class="absolute -bottom-2 -left-2 w-4 h-4 border-2 border-violet-400 rounded-full"></div>
+                        <div class="absolute -bottom-2 -right-2 w-4 h-4 border-2 border-violet-400 rounded-full"></div>
                     </div>
-                    <div class="space-y-3" id="actionButtons"></div>
-                    <div id="creditMessage" class="mt-4 text-center text-lg font-bold text-indigo-600 opacity-0 transition-opacity duration-300"></div>
+             
+                    <!-- Action Buttons Container -->
+                    <div class="space-y-3 max-w-xl mx-auto" id="actionButtons"></div>
+             
+                    <!-- Message Display -->
+                    <div id="creditMessage" class="mt-6 text-center text-lg font-bold text-indigo-600 opacity-0 transition-opacity duration-300 shadow-sm"></div>
                 </div>
-            </div>
+             </div>
         </div>
 		
 		<h2 class="text-3xl font-bold -mt-10 mb-10 gradient-text text-center">Explore Trump's Legacy</h2>
