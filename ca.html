@@ -378,6 +378,67 @@
 		.tap-highlight-transparent {
 			-webkit-tap-highlight-color: transparent;
 		}
+        .content-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: 1fr;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .slot-machine {
+            height: 48px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slot-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: absolute;
+            width: 100%;
+            animation: none;
+        }
+
+        @keyframes slotSpin {
+            0% { transform: translateY(-500%); }
+            100% { transform: translateY(0); }
+        }
+
+        .quote-box {
+            bottom: -12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .motivation-container {
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #motivation-text {
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        @font-face {
+            font-family: 'Digital';
+            src: url('https://fonts.cdnfonts.com/css/ds-digital') format('woff2');
+        }
+
+        .font-digital {
+            font-family: 'Digital', monospace;
+        }
+        
     </style>
 </head>
 <body class="min-h-screen">
@@ -421,43 +482,73 @@
 <main class="pt-40 px-4 sm:px-8 pb-16 relative z-10">
     <div class="max-w-7xl mx-auto">
 		
-		<div class="max-w-7xl mx-auto mb-16">
-			<div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
-				<div class="flex flex-col lg:flex-row items-center gap-8">
-				   <div class="w-full lg:w-1/2 text-center lg:text-left">
-					   <h2 class="text-4xl font-bold mb-6 gradient-text">
-						   The Hero We Meme'd
-					   </h2>
-					   <p class="text-slate-600 text-lg leading-relaxed">
-						   Where patriotism meets cryptocurrency. Join us in this unique fusion of political satire, blockchain innovation, and intelligent conversations, as we celebrate the intersection of meme culture and democratic discourse.
-					   </p>
-				   </div>
-					<div class="w-full lg:w-1/2">
-                        <div id="media-container" class="relative w-48 h-48 mx-auto">
-                            <img src="ca.jpg"
-                                 alt="Captain America Trump"
-                                 class="rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500 w-full h-full object-cover cursor-pointer"
-                                 id="trump-image">
-                            <video id="trump-video" 
-                                   class="rounded-2xl shadow-2xl absolute top-0 left-0 w-full h-full object-cover hidden"
-                                   controls>
-                                <source src="maga.mp4" type="video/mp4">
-                            </video>
-                        </div>
-						<div class="mt-6 text-center">
-						   <p class="text-slate-600 mb-4">Support your favorite presidential meme? Cast your vote to show the Trump-verse some love!</p>
-							<button id="voteButton" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus-visible:outline-none active:outline-none tap-highlight-transparent">
-							   Vote Now
-							</button>
-						   <div class="mt-4 w-48 mx-auto bg-gray-100 rounded-xl h-6 overflow-hidden shadow-inner border border-gray-200">
-							   <div id="voteProgress" class="h-full bg-gradient-to-l from-indigo-400 to-violet-600 transition-all duration-500 backdrop-blur-sm shadow-lg" style="width: 0%"></div>
-						   </div>
-						   <p class="mt-2 text-sm font-medium text-slate-600"><span id="voteCount" class="text-indigo-600">0</span> votes</p>
-						</div>
+        <!-- Hero section - text only -->
+        <div class="max-w-7xl mx-auto mb-16">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
+                <h2 class="text-4xl font-bold mb-6 gradient-text text-center">
+                    The Hero We Meme'd
+                </h2>
+                <p class="text-slate-600 text-md leading-relaxed lg:text-left">
+                    Where patriotism meets cryptocurrency. Join us in this unique fusion of political satire, blockchain innovation, and intelligent conversations, as we celebrate the intersection of meme culture and democratic discourse.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Vote and Social Credit grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto mb-16">
+            <!-- Vote Section with Image -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
+                <div id="media-container" class="relative w-48 h-48 mx-auto mb-6">
+                    <img src="ca.jpg" alt="Captain America Trump" class="rounded-2xl shadow-2xl transform hover:scale-105 transition-transform duration-500 w-full h-full object-cover cursor-pointer" id="trump-image">
+                    <video id="trump-video" class="rounded-2xl shadow-2xl absolute top-0 left-0 w-full h-full object-cover hidden" controls>
+                        <source src="maga.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="text-center">
+                    <p class="text-slate-600 mb-4">Support your favorite presidential meme? Cast your vote to show the Trump-verse some love!</p>
+                    <button id="voteButton" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl focus:outline-none focus-visible:outline-none active:outline-none tap-highlight-transparent">
+                        Vote Now
+                    </button>
+                    <div class="mt-4 w-48 mx-auto bg-gray-100 rounded-xl h-6 overflow-hidden shadow-inner border border-gray-200">
+                        <div id="voteProgress" class="h-full bg-gradient-to-l from-indigo-400 to-violet-600 transition-all duration-500 backdrop-blur-sm shadow-lg" style="width: 0%"></div>
                     </div>
-				</div>
-			</div>
-		</div>
+                    <p class="mt-2 text-sm font-medium text-slate-600"><span id="voteCount" class="text-indigo-600">0</span> votes</p>
+                </div>
+
+                <div class="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-50 rounded-2xl p-8 shadow-lg border border-white/40 backdrop-blur-sm hover:shadow-xl transition-all duration-300 overflow-hidden h-24 relative quote-box">                    
+                    <!-- Corner Decorations -->
+                    <div class="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-indigo-400 rounded-tl-lg"></div>
+                    <div class="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-indigo-400 rounded-tr-lg"></div>
+                    <div class="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-indigo-400 rounded-bl-lg"></div>
+                    <div class="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-indigo-400 rounded-br-lg"></div>
+
+                    <!-- Quote Container -->
+                    <div id="quote-container" class="absolute motivation-container">
+                    <span class="text-2xl font-bold text-indigo-600 hover:scale-105 transition-transform cursor-default" id="motivation-text"></span>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Social Credit Section -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-lg p-8 border border-white/20">
+                <div class="bg-white rounded-xl p-6 shadow-lg max-w-md mx-auto">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold gradient-text mb-2">MAGA Social Credit</h2>
+                        <div class="flex items-center justify-center gap-2">
+                            <span id="rankIcon"></span>
+                            <span id="rankName" class="text-lg font-semibold">Patriot</span>
+                        </div>
+                    </div>
+                    <div class="relative mb-8">
+                        <div class="w-24 h-24 mx-auto rounded-full border-4 border-indigo-600 flex items-center justify-center">
+                            <span id="creditScore" class="text-xl font-bold">1000</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3" id="actionButtons"></div>
+                    <div id="creditMessage" class="mt-4 text-center text-lg font-bold text-indigo-600 opacity-0 transition-opacity duration-300"></div>
+                </div>
+            </div>
+        </div>
 		
 		<h2 class="text-3xl font-bold -mt-10 mb-10 gradient-text text-center">Explore Trump's Legacy</h2>
 
@@ -644,6 +735,56 @@
 </footer>
 
 <script>
+const motivationalQuotes = [
+    "We're going to win BIG!",
+    "Your VOTE is your VOICE!",
+    "Let's WIN WIN WIN!",
+    "Make every vote COUNT!",
+    "The silent majority rises!",
+    "Time to vote, PATRIOTS!",
+    "We don't lose anymore!",
+    "VICTORY like never before!",
+    "Real votes, real POWER!",
+    "Get out and VOTE!",
+    "Vote like a CHAMPION!",
+    "PATRIOTS vote STRONG!",
+    "Voting made GREAT again!",
+    "TOGETHER we WIN!",
+    "Vote for GREATNESS!",
+    "The BEST is yet to come!",
+    "They FEAR your vote!",
+    "Make it TREMENDOUS!",
+    "No brakes on WINNING!",
+    "VICTORY is coming!"
+];
+
+    let currentQuoteIndex = 0;
+    const quoteElement = document.getElementById('motivation-text');
+    const container = document.getElementById('quote-container');
+
+    function updateMotivation() {
+    container.style.transform = 'translate(-50%, 100%)';
+    container.style.opacity = '0';
+    
+    setTimeout(() => {
+        currentQuoteIndex = (currentQuoteIndex + 1) % motivationalQuotes.length;
+        quoteElement.textContent = motivationalQuotes[currentQuoteIndex];
+        
+        container.style.transition = 'none';
+        container.style.transform = 'translate(-50%, -100%)';
+        container.style.opacity = '0';
+        
+        container.offsetHeight;
+        
+        container.style.transition = 'all 0.5s ease-in-out';
+        container.style.transform = 'translate(-50%, 0)';
+        container.style.opacity = '1';
+    }, 500);
+}
+
+    setInterval(updateMotivation, 5000);
+    quoteElement.textContent = motivationalQuotes[0];
+
     window.addEventListener('click', (e) => {
         if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
             toggleMenu();
@@ -857,6 +998,12 @@ voteButton.addEventListener('click', async () => {
         voteButton.disabled = true;
         voteButton.classList.add('opacity-50', 'cursor-not-allowed');
         
+        // Add social credit for voting
+        socialCredit += 50;
+        updateRank();
+        showMessage('Vote counted! +50 social credit!');
+        localStorage.setItem('socialCredit', socialCredit);
+        
         setTimeout(() => {
             voteButton.disabled = false;
             voteButton.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -881,5 +1028,135 @@ document.getElementById('trump-video').addEventListener('ended', () => {
         </button>
     </div>
 </div>
+<script>
+// Social Credit System
+let socialCredit = 1000;
+const ranks = [
+   { min: 0, name: 'RINO', icon: '⭐️' },
+   { min: 500, name: 'Patriot', icon: '🌟' },
+   { min: 1000, name: 'True Believer', icon: '🎖️' },
+   { min: 2000, name: 'MAGA Warrior', icon: '🏆' }
+];
+
+const challenges = [
+   {
+       id: 'hourly_vote',
+       name: 'Cast Your Vote',
+       reward: 50,
+       cooldown: 60 * 60 * 1000,
+       description: 'Vote every hour to earn MAGA points',
+       verify: () => {
+           const lastVoteTime = localStorage.getItem('lastVoteTime');
+           if (!lastVoteTime || (Date.now() - parseInt(lastVoteTime)) >= 60 * 60 * 1000) {
+               voteButton.click();
+               return true;
+           }
+           return false;
+       }
+   },
+   {
+       id: 'meme_share',
+       name: 'Share MAGA Memes',
+       reward: 100,
+       description: 'Share this page on Twitter/X',
+       verify: () => {
+        window.open(`https://twitter.com/intent/tweet?text=Found%20the%20ultimate%20Trump%20meme%20collection!%20Captain%20America%20meets%20MAGA%20🦅✨%20%23TrumpMemes%20%23CaptainMAGA&url=captainamerica.io`, '_blank');
+           return true;
+       }
+   },
+   {
+       id: 'daily_login',
+       name: 'Daily Patriot Check-in',
+       reward: 50,
+       cooldown: 24 * 60 * 60 * 1000,
+       description: 'Check in daily to show your loyalty',
+       verify: () => {
+           const lastLogin = localStorage.getItem('lastLogin');
+           if (!lastLogin || (Date.now() - parseInt(lastLogin)) >= 24 * 60 * 60 * 1000) {
+               localStorage.setItem('lastLogin', Date.now());
+               return true;
+           }
+           return false;
+       }
+   },
+   {
+       id: 'telegram_join',
+       name: 'Join the Movement',
+       reward: 200,
+       description: 'Join our Telegram group',
+       oneTime: true,
+       verify: () => {
+           window.open('https://t.me/TrumpCAofficial', '_blank');
+           if (!localStorage.getItem('telegram_joined')) {
+               localStorage.setItem('telegram_joined', 'true');
+               return true;
+           }
+           return false;
+       }
+   }
+];
+
+// Initialize challenge buttons
+const actionButtons = document.getElementById('actionButtons');
+challenges.forEach(challenge => {
+   const button = document.createElement('button');
+   button.className = `w-full p-4 rounded-xl text-left transition-all duration-300
+                      bg-gradient-to-r from-white/80 to-white/60 backdrop-blur-sm
+                      hover:from-indigo-50 hover:to-purple-50
+                      border border-indigo-100 shadow-sm
+                      hover:shadow-lg hover:-translate-y-0.5
+                      group relative overflow-hidden
+                      ${challenge.oneTime && localStorage.getItem(challenge.id) ? 'opacity-50' : ''}`;
+
+   button.innerHTML = `
+       <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-violet-500 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+       <div class="flex justify-between items-center mb-2 relative z-10">
+           <span class="font-semibold text-indigo-900">${challenge.name}</span>
+           <span class="px-3 py-1 rounded-full bg-green-100 text-green-600 text-sm font-medium">+${challenge.reward}</span>
+       </div>
+       <div class="flex items-center gap-2 relative z-10">
+           <span class="text-sm text-slate-600 group-hover:text-indigo-900 transition-colors">${challenge.description}</span>
+           <span class="ml-auto text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+       </div>
+   `;
+
+   button.onclick = async () => {
+       if (await challenge.verify()) {
+           socialCredit += challenge.reward;
+           updateRank();
+           showMessage(`Challenge completed! +${challenge.reward} social credit!`);
+           localStorage.setItem('socialCredit', socialCredit);
+       } else {
+           if (challenge.cooldown) {
+               showMessage('Please wait before trying again!');
+           } else if (challenge.oneTime) {
+               showMessage('Challenge already completed!');
+           }
+       }
+   };
+   
+   actionButtons.appendChild(button);
+});
+
+function updateRank() {
+   const currentRank = ranks.reduce((acc, rank) => 
+       socialCredit >= rank.min ? rank : acc
+   );
+   document.getElementById('rankIcon').textContent = currentRank.icon;
+   document.getElementById('rankName').textContent = currentRank.name;
+   document.getElementById('creditScore').textContent = socialCredit;
+}
+
+function showMessage(msg) {
+   const messageEl = document.getElementById('creditMessage');
+   messageEl.textContent = msg;
+   messageEl.classList.add('opacity-100');
+   setTimeout(() => messageEl.classList.remove('opacity-100'), 2000);
+}
+
+// Load saved social credit
+socialCredit = parseInt(localStorage.getItem('socialCredit')) || 1000;
+updateRank();
+</script>
 </body>
 </html>
